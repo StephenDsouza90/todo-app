@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block title%}
+    Todo App | Track Task
+{% endblock%}
+
+{% block content %}
+    {% if context['tasks'] %}
+        <legend class="border-bottom mb-4 text-center">
+            <div> Task Tracker </div>
+        </legend>
+        <div class="table-responsive">
+        <table class="table text-center table-sm">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Priority</th>
+                    <th scope="col">Group</th>
+                    <th scope="col">Assigned To</th>
+                </tr>            
+            </thead>
+            <tbody>
+                {% for task, category, priority, status, user, group in context['tasks'] %}
+                <tr>
+                    <td>{{ task.task_title }}</td>
+                    <td>{{ task.task_desc }}</td>
+                    <td>{{ task.task_date }}</td>
+                    <td>{{ category.category_name }}</td>
+                    <td>{{ status.status_name }}</td>
+                    <td>{{ priority.priority_name }}</td>
+                    <td>{{ group.group_name }}</td>
+                    <td>{{ user.username }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    {% endif %}
+{% endblock %}

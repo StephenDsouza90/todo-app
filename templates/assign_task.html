@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+
+{% block title%}
+    Todo App | Assign Task
+{% endblock%}
+
+{% block content %}
+    <legend class="border-bottom mb-4 text-center">
+        <div>
+            Assign a Task
+        </div>
+    </legend>
+    {% for group in context['group_name'] %}
+        {% for user in context['assignee_name'] %}
+        <form action="/assign-task/{{ group['group_id'] }}/{{ user['user_id'] }}" method="POST">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                        <label for="GroupName"> Group Name: {{ group['group_name'] }} </label>
+                </div>
+                <div class="form-group col-md-6">
+                        <label for="AssigneeName"> Assigned To: {{ user['username'] }} </label>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label for="inputTitle">Task Title*</label>
+                    <input type="text" class="form-control" name="task_title" placeholder="Task title">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label for="inputDesc">Task Description*</label>
+                    <input type="text" class="form-control" name="task_desc" placeholder="Task description">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label for="inputCategory">Task Category*</label>
+                    <select name="category_id" class="form-control">
+                    {% for category in context['categories'] %}
+                        <option value="{{ category['category_id'] }}">{{ category['category_name'] }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="inputStatus">Task Status*</label>
+                    <select name="status_id" class="form-control">
+                    {% for status in context['status'] %}
+                        <option value="{{ status['status_id'] }}">{{ status['status_name'] }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="inputPriority">Task Priority*</label>
+                    <select name="priority_id" class="form-control">
+                    {% for priority in context['priorities'] %}
+                        <option value="{{ priority['priority_id'] }}">{{ priority['priority_name'] }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="inputCreatedDate">Task Date*</label>
+                    <input type="date" class="form-control" name="task_date">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Assign Task</button>
+        </form>
+        {% endfor %}
+    {% endfor %}
+{% endblock %}

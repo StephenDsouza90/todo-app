@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %} {% endblock %}</title>
+
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>   
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" 
+            integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+        
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+            <a class="navbar-brand" href="/">Todo App</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>            
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            {% if session.username %}
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link" href="/allactivity">Activity Log</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/files">Files</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/groups">Groups</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/track-assigned-task">Track Task</a></li>
+                </ul>
+                <ul class="navbar-nav mr-auto">
+                    <li><form class="form-inline" action="/search" method="GET">
+                            <input type="text" class="form-control mr-sm-2" name="parameter" placeholder="Search by title or desc"/>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-search fa-sm"></i></button>
+                        </form></li>
+                    <li><div class="dropdown">
+                            <a href="#" class="btn btn-primary" class="dropdown-toggle" data-toggle="dropdown">View by <i class="fas fa-caret-down"></i></a>
+                            <div class="dropdown-menu">
+                                <a href="/search/c/1" value="1" class="dropdown-item">Default</a>
+                                <a href="/search/c/2" value="2" class="dropdown-item">Personal</a>
+                                <a href="/search/c/3" value="3" class="dropdown-item">Shopping</a>
+                                <a href="/search/c/4" value="4" class="dropdown-item">Wishlist</a>
+                                <a href="/search/c/5" value="5" class="dropdown-item">Work</a>
+                                <div class="dropdown-divider"></div>
+                                <div class="dropdown-divider"></div>
+                                <a href="/search/s/1" value="1" class="dropdown-item">Ongoing</a>
+                                <a href="/search/s/2" value="2" class="dropdown-item">Completed</a>
+                                <div class="dropdown-divider"></div>
+                                <a href="/search/p/1" value="1" class="dropdown-item">High</a>
+                                <a href="/search/p/2" value="2" class="dropdown-item">Medium</a>
+                                <a href="/search/p/3" value="3" class="dropdown-item">Low</a>
+                            </div>
+                        </div></li>              
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a href="/add-task" class="btn btn-primary"><i class="fas fa-plus fa-sm"></i> Add Task</a></li>
+                    <li class="nav-item"><a href="/add-file" class="btn btn-primary"><i class="fas fa-plus fa-sm"></i> Add File</a></li>
+                    <li class="nav-item"><a href="/create-group" class="btn btn-primary"><i class="fas fa-plus fa-sm"></i> Create Group</a></li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link">Welcome {{ session.username }}!</a></li>
+                    <li class="nav-item"><a class="nav-link">User ID: {{ session.user_id }}</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                </ul>
+            {% else %}
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="/get-started">Get started</a></li>
+                </ul>
+            {% endif %}
+            </div>
+        </nav>
+
+        {% if get_flashed_messages() %}
+            <div class="alert alert-info text-center alert-dismissible fade show" role="alert">
+                <span> {{ get_flashed_messages() | join(" ") }} </span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endif %}
+
+        <main class="container p-5">
+            {% block content %}
+
+            {% endblock %}
+        </main>
+    </body>
+</html>

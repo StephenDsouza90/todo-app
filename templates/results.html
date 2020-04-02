@@ -1,0 +1,188 @@
+{% extends "layout.html" %}
+
+{% block title%}
+    Todo App | Result
+{% endblock%}
+
+{% block content %}
+    {% if context['resultTaskCategory'] %}
+        <legend class="border-bottom mb-4 text-center">
+            <div>
+                Result by Category
+            </div>
+        </legend>
+        <div class="table-responsive">
+        <table class="table text-center table-sm">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Task Title</th>
+                    <th scope="col">Task Description</th>
+                    <th scope="col">Task Date</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Update</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task, category in context['resultTaskCategory'] %}
+                <tr>
+                    <td>{{ task.task_title }}</td>
+                    <td>{{ task.task_desc }}</td>
+                    <td>{{ task.task_date }}</td>
+                    <td>{{ category.category_name }}</td>
+                    <td><a href="/update-task/{{ task.task_id }}" class="btn btn-primary"><i class="fas fa-edit fa-sm"></i></a></td>
+                    <td><a href="/delete-task/{{ task.task_id }}" class="btn btn-primary"><i class="fas fa-trash fa-sm"></i></a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    {% endif %}
+    {% if context['resultTaskStatus'] %}
+        <legend class="border-bottom mb-4 text-center">
+            <div>
+                Result by Status
+            </div>
+        </legend>
+        <div class="table-responsive">
+        <table class="table text-center table-sm">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Task Title</th>
+                    <th scope="col">Task Description</th>
+                    <th scope="col">Task Date</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Update</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task, status in context['resultTaskStatus'] %}
+                <tr>
+                    <td>{{ task.task_title }}</td>
+                    <td>{{ task.task_desc }}</td>
+                    <td>{{ task.task_date }}</td>
+                    <td>{{ status.status_name }}</td>
+                    <td><a href="/update-task/{{ task.task_id }}" class="btn btn-primary"><i class="fas fa-edit fa-sm"></i></a></td>
+                    <td><a href="/delete-task/{{ task.task_id }}" class="btn btn-primary"><i class="fas fa-trash fa-sm"></i></a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    {% endif %}
+    {% if context['resultTaskPriority'] %}
+        <legend class="border-bottom mb-4 text-center">
+            <div>
+                Result by Priority
+            </div>
+        </legend>
+        <div class="table-responsive">
+        <table class="table text-center table-sm">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Task Title</th>
+                    <th scope="col">Task Description</th>
+                    <th scope="col">Task Date</th>
+                    <th scope="col">Priority</th>
+                    <th scope="col">Update</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task, priority in context['resultTaskPriority'] %}
+                <tr>
+                    <td>{{ task.task_title }}</td>
+                    <td>{{ task.task_desc }}</td>
+                    <td>{{ task.task_date }}</td>
+                    <td>{{ priority.priority_name }}</td>
+                    <td><a href="/update-task/{{ task.task_id }}" class="btn btn-primary"><i class="fas fa-edit fa-sm"></i></a></td>
+                    <td><a href="/delete-task/{{ task.task_id }}" class="btn btn-primary"><i class="fas fa-trash fa-sm"></i></a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    {% endif %}
+    {% if context['resultSearchBy'] %}
+        <legend class="border-bottom mb-4 text-center">
+            <div>
+                Result by Title or Description
+            </div>
+        </legend>
+        <div class="table-responsive">
+        <table class="table text-center table-sm">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Task Title</th>
+                    <th scope="col">Task Description</th>
+                    <th scope="col">Update</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in context['resultSearchBy'] %}
+                <tr>
+                    <td>{{ task.task_title }}</td>
+                    <td>{{ task.task_desc }}</td>
+                    <td><a href="/update-task/{{ task.task_id }}" class="btn btn-primary"><i class="fas fa-edit fa-sm"></i></a></td>
+                    <td><a href="/delete-task/{{ task.task_id }}" class="btn btn-primary"><i class="fas fa-trash fa-sm"></i></a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    {% endif %}
+    {% if context['resultActivityLog'] %}
+        <legend class="border-bottom mb-4 text-center">
+            <div>
+                Activity Log
+            </div>
+        </legend>
+        <div class="table-responsive">
+        <table class="table text-left table-sm">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Activity</th>
+                    <th scope="col">Log Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for activity_log, user, available_activities, task in context['resultActivityLog'] %}
+                <tr>
+                    <td>{{ user.username}} {{ available_activities.activity_name}} {{ task.task_title }}</td>
+                    <td>{{ activity_log.log_date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    {% endif %}
+    {% if context['resultFiles'] %}
+        <legend class="border-bottom mb-4 text-center">
+            <div>
+                Files
+            </div>
+        </legend>
+        <div class="table-responsive">
+        <table class="table text-center table-sm">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">File Name</th>
+                    <th scope="col">Download</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for file in context['resultFiles'] %}
+                <tr>
+                    <td>{{ file.file_name}}</td>
+                    <td><a href="/download-file/{{ file.file_id }}" class="btn btn-primary"><i class="fas fa-download fa-sm"></i></a></td>
+                    <td><a href="/delete-file/{{ file.file_id }}" class="btn btn-primary"><i class="fas fa-trash fa-sm"></i></a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+
+{% block title%}
+    Todo App | Groups
+{% endblock%}
+
+{% block content %}
+    <div class="row">
+        <div class="row-group col-md-3">
+            <nav id="sidebar">
+                <legend class="border-bottom mb-4 text-center">
+                    <div> Your Groups </div>
+                </legend>
+                {% for group_name in context['groupsDict'] %}
+                <ul class="items">
+                    <li><h5> {{ group_name }} </h5></li>
+                    {% for users in context['groupsDict'][group_name] %}
+                    <ul class="items">
+                        <li> {{ users[0] }} 
+                            <a href="/assign-task/{{ users[1] }}/{{ users[2] }}" class="btn btn-primary">
+                                <i class="fas fa-plus fa-sm"></i> Assign Task
+                            </a>
+                        </li>
+                    </ul>
+                    {% endfor %}
+                </ul>
+                {% endfor %}
+            </nav>
+        </div>
+        <div class="row-group col-md-6">
+            {% if context['assigned_task'] %}
+                <legend class="border-bottom mb-4 text-center">
+                    <div> Assigned Task </div>
+                </legend>
+                <div class="table-responsive">
+                    <table class="table text-center table-sm">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Title</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Priority</th>
+                                <th scope="col">Group</th>
+                                <th scope="col">Assigned By</th>
+                                <th scope="col">Update</th>
+                            </tr>            
+                        </thead>
+                        <tbody>
+                            {% for task, category, priority, status, user, group in context['assigned_task'] %}
+                            <tr>
+                                <td>{{ task.task_title }}</td>
+                                <td>{{ task.task_desc }}</td>
+                                <td>{{ task.task_date }}</td>
+                                <td>{{ category.category_name }}</td>
+                                <td>{{ status.status_name }}</td>
+                                <td>{{ priority.priority_name }}</td>
+                                <td>{{ group.group_name }}</td>
+                                <td>{{ user.username }}</td>
+                                <td><a href="/update-assigned-task/{{ task.task_id }}" class="btn btn-primary"><i class="fas fa-edit fa-sm"></i></a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+        <div class="row-group col-md-3">
+            <nav id="sidebar">
+                <legend class="border-bottom mb-4 text-center">
+                    <div> Available Users </div>
+                </legend>
+                <form action="/send-request" method="POST">
+                    <div class="form-group">
+                        <ul class="items">
+                            <li><label for="inputUsers">Users: </label>
+                                <select name="receiver_id">
+                                {% for user in context['users'] %}
+                                    <option value="{{ user['user_id'] }}">{{ user['username'] }}</option>
+                                {% endfor %}
+                                </select></li>
+                            <li><label for="inputGroup">Groups: </label>
+                                <select name="group_id">
+                                {% for group in context['groups_created_by_user'] %}
+                                    <option value="{{ group['group_id'] }}">{{ group['group_name'] }}</option>
+                                {% endfor %}
+                                </select></li>
+                            <li><button type="submit" class="btn btn-primary"><i class="fas fa-user-plus fa-sm"></i> Send Request</button></li>
+                        </ul>
+                    </div>
+                </form>
+            </nav>
+        </div>
+    </div>
+{% endblock %}

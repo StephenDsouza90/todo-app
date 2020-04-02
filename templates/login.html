@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block title%}
+    Todo App | Get started
+{% endblock%}
+
+{% block content %}
+    <h3>Enter a Username to get started</h3>
+    <form action="/get-started" method="POST">
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
+        </div>
+        <button class="btn btn-primary" type="submit">Get started</button>
+    </form>
+{% endblock %}

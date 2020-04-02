@@ -1,0 +1,214 @@
+{% extends "layout.html" %}
+
+{% block title%}
+    Todo App | Home
+{% endblock%}
+
+{% block content %}
+    <div class="row">
+        <div class="row-group col-md-3">
+            <nav id="sidebar">
+                <h5 class="border-bottom mb-4 text-center">
+                    <div> Requests from Users </div>
+                </h5>
+                {% for request, group, user in context['requests'] %}
+                <form action="/accept-request/{{ request.group_id }}/{{ request.receiver_id }}" method="POST">
+                    <ul class="items">
+                        <li> Group Name: {{ group.group_name }} </li>
+                        <li> Sender: {{ user.username }} </li>
+                        <li><button type="submit" class="btn btn-primary"> 
+                                <i class="fas fa-user-plus fa-sm"></i> Accept</a></button></li>
+                    </ul>
+                </form>
+                <form action="/decline-request/{{ request.group_id }}/{{ request.receiver_id }}" method="GET">
+                    <ul class="items">
+                        <li><button type="submit" class="btn btn-primary"> 
+                                <i class="fas fa-trash fa-sm"></i> Decline</a></button></li>
+                    </ul>
+                </form>
+                {% endfor %}
+            </nav>
+        </div>
+        <div class="row-group col-md-9">
+            {% if context['overdue'] %}
+            <legend class="border-bottom mb-4 text-center">
+                <div id="overdue"> Overdue </div>
+            </legend>
+            <div class="table-responsive">
+            <table class="table text-center table-sm">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Priority</th>
+                        <th scope="col">Update</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task, category, status, priority in context['overdue'] %}
+                    <tr>
+                        <td>{{ task.task_title }}</td>
+                        <td>{{ task.task_desc }}</td>
+                        <td>{{ task.task_date }}</td>
+                        <td>{{ category.category_name }}</td>
+                        <td>{{ status.status_name }}</td>
+                        <td>{{ priority.priority_name }}</td>
+                        <td><a href="/update-task/{{ task.task_id }}" class="btn btn-primary"><i class="fas fa-edit fa-sm"></i></a></td>
+                        <td><a href="/delete-task/{{ task.task_id }}" class="btn btn-primary"><i class="fas fa-trash fa-sm"></i></a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        {% endif %}
+        <br>
+        {% if context['today'] %}
+            <legend class="border-bottom mb-4 text-center">
+                <div id="today"> Today </div>
+            </legend>
+            <div class="table-responsive">
+            <table class="table text-center table-sm">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Priority</th>
+                        <th scope="col">Update</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task, category, status, priority in context['today'] %}
+                    <tr>
+                        <td>{{ task.task_title }}</td>
+                        <td>{{ task.task_desc }}</td>
+                        <td>{{ task.task_date }}</td>
+                        <td>{{ category.category_name }}</td>
+                        <td>{{ status.status_name }}</td>
+                        <td>{{ priority.priority_name }}</td>
+                        <td><a href="/update-task/{{ task.task_id }}" class="btn btn-primary"><i class="fas fa-edit fa-sm"></i></a></td>
+                        <td><a href="/delete-task/{{ task.task_id }}" class="btn btn-primary"><i class="fas fa-trash fa-sm"></i></a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>    
+        {% endif %}
+        <br>
+        {% if context['tomorrow'] %}
+            <legend class="border-bottom mb-4 text-center">
+                <div id="tomorrow"> Tomorrow </div>
+            </legend>
+            <div class="table-responsive">
+            <table class="table text-center table-sm">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Priority</th>
+                        <th scope="col">Update</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task, category, status, priority in context['tomorrow'] %}
+                    <tr>
+                        <td>{{ task.task_title }}</td>
+                        <td>{{ task.task_desc }}</td>
+                        <td>{{ task.task_date }}</td>
+                        <td>{{ category.category_name }}</td>
+                        <td>{{ status.status_name }}</td>
+                        <td>{{ priority.priority_name }}</td>
+                        <td><a href="/update-task/{{ task.task_id }}" class="btn btn-primary"><i class="fas fa-edit fa-sm"></i></a></td>
+                        <td><a href="/delete-task/{{ task.task_id }}" class="btn btn-primary"><i class="fas fa-trash fa-sm"></i></a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>    
+        {% endif %}
+        <br>
+        {% if context['upcoming'] %}
+            <legend class="border-bottom mb-4 text-center">
+                <div id="upcoming"> Upcoming </div>
+            </legend>
+            <div class="table-responsive">
+            <table class="table text-center table-sm">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Priority</th>
+                        <th scope="col">Update</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task, category, status, priority in context['upcoming'] %}
+                    <tr>
+                        <td>{{ task.task_title }}</td>
+                        <td>{{ task.task_desc }}</td>
+                        <td>{{ task.task_date }}</td>
+                        <td>{{ category.category_name }}</td>
+                        <td>{{ status.status_name }}</td>
+                        <td>{{ priority.priority_name }}</td>
+                        <td><a href="/update-task/{{ task.task_id }}" class="btn btn-primary"><i class="fas fa-edit fa-sm"></i></a></td>
+                        <td><a href="/delete-task/{{ task.task_id }}" class="btn btn-primary"><i class="fas fa-trash fa-sm"></i></a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>    
+        {% endif %}
+        <br>
+        {% if context['completed'] %}
+            <legend class="border-bottom mb-4 text-center">
+                <div> Completed </div>
+            </legend>
+            <div class="table-responsive">
+            <table class="table text-center table-sm">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Priority</th>
+                        <th scope="col">Update</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task, category, status, priority in context['completed'] %}
+                    <tr>
+                        <td>{{ task.task_title }}</td>
+                        <td>{{ task.task_desc }}</td>
+                        <td>{{ task.task_date }}</td>
+                        <td>{{ category.category_name }}</td>
+                        <td>{{ status.status_name }}</td>
+                        <td>{{ priority.priority_name }}</td>
+                        <td><a href="/update-task/{{ task.task_id }}" class="btn btn-primary"><i class="fas fa-edit fa-sm"></i></a></td>
+                        <td><a href="/delete-task/{{ task.task_id }}" class="btn btn-primary"><i class="fas fa-trash fa-sm"></i></a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>    
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}

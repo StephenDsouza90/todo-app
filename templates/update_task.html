@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block title%}
+    Todo App | Update Task
+{% endblock%}
+
+{% block content %}
+    {% for task, categories, status, priorities in context['task'] %}
+        <legend class="border-bottom mb-4 text-center">
+            <div>
+                Update a task | Task Title: "{{ task['task_title'] }}"
+            </div>
+        </legend>
+        <form action="/update-task/{{ task['task_id'] }}" method="POST">
+            <div class="form-group">
+                <label for="inputTitle">Task Title</label>
+                <input type="text" class="form-control" name="task_title" value="{{ task['task_title'] }}">
+            </div>
+            <div class="form-group">
+                <label for="inputDesc">Task Description</label>
+                <input type="text" class="form-control" name="task_desc" value="{{ task['task_desc'] }}">
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label for="inputCategory">Task Category</label>
+                    <select name="category_id" class="form-control">
+                    {% for category in context['categories'] %}
+                        <option value="{{ category['category_id'] }}">{{ category['category_name'] }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="inputStatus">Task Status</label>
+                    <select name="status_id" class="form-control">
+                    {% for status in context['status'] %}
+                        <option value="{{ status['status_id'] }}">{{ status['status_name'] }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="inputPriority">Task Priority</label>
+                    <select name="priority_id" class="form-control">
+                    {% for priority in context['priorities'] %}
+                        <option value="{{ priority['priority_id'] }}">{{ priority['priority_name'] }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="inputCreatedDate">Task Date</label>
+                    <input type="date" class="form-control" name="task_date">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title%}
+    Todo App | Add File
+{% endblock%}
+
+{% block content %}
+    <legend class="border-bottom mb-4 text-center">
+        <div>
+            Add a File
+        </div>
+    </legend>
+    <form action="/add-file" method="POST", enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="inputTitle">File Name</label>
+            <input type="text" class="form-control" name="file_name" placeholder="File name">
+        </div>
+        <div class="form-group">
+            <label for="inputFile">Upload File (.pdf only): </label>
+            <input type="file" name="inputFile">
+        </div>
+        <button type="submit" class="btn btn-primary">Add</button>
+    </form>
+{% endblock %}

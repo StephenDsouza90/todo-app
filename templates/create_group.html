@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title%}
+    Todo App | Create Group
+{% endblock%}
+
+{% block content %}
+    <legend class="border-bottom mb-4 text-center">
+        <div>
+            Create a Group
+        </div>
+    </legend>
+    <form action="/create-group" method="POST">
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label for="inputGroupName">Group Name*</label>
+                <input type="text" class="form-control" name="group_name" placeholder="Group name">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+{% endblock %}
