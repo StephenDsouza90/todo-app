@@ -50,23 +50,8 @@ class User(Base):
     username = Column(String(256), nullable=False, unique=True)
 
 
-class Task(Base):
-    """ Represents user's task """
-
-    __tablename__ = "task"
-    task_id = Column(Integer(), primary_key=True, nullable=False, unique=True, 
-                autoincrement=True)
-    task_title = Column(String(256), nullable=False)
-    task_desc = Column(String(256), nullable=False)
-    task_date = Column(Date, nullable=False)
-    user_id = Column(Integer(), ForeignKey("users.user_id"), nullable=False)
-    category_id = Column(Integer(), ForeignKey("categories.category_id"), nullable=False)
-    status_id = Column(Integer(), ForeignKey("status.status_id"), nullable=False)
-    priority_id = Column(Integer(), ForeignKey("priority.priority_id"), nullable=False)
-
-
 class Category(Base):
-    """ Represents task category """
+    """ Represents task categories """
 
     __tablename__ = "categories"
     category_id = Column(Integer(), primary_key=True, nullable=False, 
@@ -84,24 +69,27 @@ class Status(Base):
 
 
 class Priority(Base):
-    """ Represents task priority """
+    """ Represents task priorities """
 
-    __tablename__ = "priority"
+    __tablename__ = "priorities"
     priority_id = Column(Integer(), primary_key=True, nullable=False, unique=True, 
                     autoincrement=True)
     priority_name = Column(String(256), nullable=False)
 
 
-class ActivityLog(Base):
-    """ Represents user activity log """
+class Task(Base):
+    """ Represents user tasks """
 
-    __tablename__ = "activities"
-    log_id = Column(Integer(), primary_key=True, nullable=False, unique=True, 
-                    autoincrement=True)
+    __tablename__ = "tasks"
+    task_id = Column(Integer(), primary_key=True, nullable=False, unique=True, 
+                autoincrement=True)
+    task_title = Column(String(256), nullable=False)
+    task_desc = Column(String(256), nullable=False)
+    task_date = Column(Date, nullable=False)
     user_id = Column(Integer(), ForeignKey("users.user_id"), nullable=False)
-    activity_id = Column(Integer(), ForeignKey("available_activities.activity_id"), nullable=False)
-    task_id = Column(Integer(), ForeignKey("task.task_id"), nullable=False)
-    log_date = Column(DateTime(), nullable=False)
+    category_id = Column(Integer(), ForeignKey("categories.category_id"), nullable=False)
+    status_id = Column(Integer(), ForeignKey("status.status_id"), nullable=False)
+    priority_id = Column(Integer(), ForeignKey("priorities.priority_id"), nullable=False)
 
 
 class AvailableActivities(Base):
@@ -113,8 +101,20 @@ class AvailableActivities(Base):
     activity_name = Column(String(256), nullable=False)
 
 
+class ActivityLog(Base):
+    """ Represents user activity logs """
+
+    __tablename__ = "activities_log"
+    log_id = Column(Integer(), primary_key=True, nullable=False, unique=True, 
+                    autoincrement=True)
+    user_id = Column(Integer(), ForeignKey("users.user_id"), nullable=False)
+    activity_id = Column(Integer(), ForeignKey("available_activities.activity_id"), nullable=False)
+    task_id = Column(Integer(), ForeignKey("tasks.task_id"), nullable=False)
+    log_date = Column(DateTime(), nullable=False)
+
+
 class FilesContent(Base):
-    """ Represents user's files """
+    """ Represents user files """
 
     __tablename__ = "files"
     file_id = Column(Integer(), primary_key=True, unique=True, autoincrement=True)
@@ -124,7 +124,7 @@ class FilesContent(Base):
 
 
 class Group(Base):
-    """ Groups created by users """
+    """ Represents groups created by users """
 
     __tablename__ = "groups"
     group_id = Column(Integer(), primary_key=True, nullable=False, unique=True, 
@@ -134,7 +134,7 @@ class Group(Base):
 
 
 class UserGroup(Base):
-    """ Groups which users are in after accepted request """
+    """ Represents groups which users are in after accepted request """
 
     __tablename__ = "user_groups"
     id = Column(Integer(), primary_key=True)
@@ -143,7 +143,7 @@ class UserGroup(Base):
 
 
 class Request(Base):
-    """ Request sent to users to join a group """
+    """ Represents requests sent from one user to another to join a group """
 
     __tablename__ = "request"
     id = Column(Integer(), primary_key=True)
@@ -153,9 +153,9 @@ class Request(Base):
 
 
 class TaskAssignment(Base):
-    """ Task assigned by user """
+    """ Represents tasks assigned by other users """
 
-    __tablename__ = "task_assignment"
+    __tablename__ = "tasks_assignment"
     task_id = Column(Integer(), primary_key=True, nullable=False, unique=True, 
                 autoincrement=True)
     task_title = Column(String(256), nullable=False)
@@ -163,57 +163,74 @@ class TaskAssignment(Base):
     task_date = Column(Date, nullable=False)
     category_id = Column(Integer(), ForeignKey("categories.category_id"), nullable=False)
     status_id = Column(Integer(), ForeignKey("status.status_id"), nullable=False)
-    priority_id = Column(Integer(), ForeignKey("priority.priority_id"), nullable=False)
+    priority_id = Column(Integer(), ForeignKey("priorities.priority_id"), nullable=False)
     group_id = Column(Integer(), ForeignKey("groups.group_id"), nullable=False)
     assignee_id = Column(Integer(), ForeignKey("users.user_id"), nullable=False)
     assigner_id = Column(Integer(), ForeignKey("users.user_id"), nullable=False)
 
 
 class Customer:
-    """ Customer's operation """
+    """ Represents customer operations. Methods perform SQL statments on DB classes """
 
-    ### METHODS FOR TASK
+    ### METHODS FOR TASKS
     def signup(self, session, username):
-        userSignup = User(username=username)
-        session.add(userSignup)
+        user = User(username=username)
+        session.add(user)
         session.commit()
-        return userSignup
+        return user
     
-    def login(self, session, username):
-        userLogin = session.query(User).filter_by(username=username).first()
-        return userLogin
+    def get_user(self, session, username):
+        user = session.query(User).filter_by(username=username).first()
+        return user
 
     def add_task(self, session, task_title, task_desc, task_date, user_id, category_id, status_id, priority_id):
-        addTask = Task(task_title=task_title, task_desc=task_desc, task_date=task_date,
-            user_id=user_id, category_id=category_id, status_id=status_id, priority_id=priority_id)
-        session.add(addTask)
+        task = Task(task_title=task_title, task_desc=task_desc, task_date=task_date, user_id=user_id,
+                 category_id=category_id, status_id=status_id, priority_id=priority_id)
+        session.add(task)
         session.commit()
-        return addTask
+        return task
+
+    def get_categories(self, session):
+        categories = session.query(Category).all()
+        return categories
+
+    def get_status(self, session):
+        status = session.query(Status).all()
+        return status
+
+    def get_priorities(self, session):
+        priorities = session.query(Priority).all()
+        return priorities
 
     def get_tasks(self, session, user_id):
-        getTasks = session.query(Task, Category, Status, Priority).\
+        tasks = session.query(Task, Category, Status, Priority).\
                     filter(Task.category_id == Category.category_id).\
                     filter(Task.status_id == Status.status_id).\
                     filter(Task.priority_id == Priority.priority_id).\
                     filter(Task.user_id == user_id)
-        return getTasks
+        return tasks
+
+    def get_task(self, session, task_id):
+        task = session.query(Task, Category, Status, Priority).\
+                filter(Task.category_id == Category.category_id).\
+                filter(Task.status_id == Status.status_id).\
+                filter(Task.priority_id == Priority.priority_id).\
+                filter(Task.task_id == task_id)
+        return task
 
     def update_task(self, session, task_id, task_title, task_desc, task_date, category_id, status_id, priority_id):
-        updateTask = session.query(Task).filter(Task.task_id == task_id).\
-                        update({Task.task_title: task_title,
-                                Task.task_desc: task_desc,
-                                Task.task_date: task_date,
-                                Task.category_id: category_id,
-                                Task.status_id: status_id,
-                                Task.priority_id: priority_id},
-                                synchronize_session=False)
+        task = session.query(Task).filter(Task.task_id == task_id).\
+                    update({Task.task_title: task_title, Task.task_desc: task_desc,
+                            Task.task_date: task_date, Task.category_id: category_id,
+                            Task.status_id: status_id, Task.priority_id: priority_id},
+                            synchronize_session=False)
         session.commit()
-        return updateTask
+        return task
 
     def delete_task(self, session, task_id):
-        deleteTask = session.query(Task).filter_by(task_id=task_id).delete()
+        task = session.query(Task).filter_by(task_id=task_id).delete()
         session.commit()
-        return deleteTask
+        return task
 
     def get_tasks_by_category(self, session, user_id, category_id):
         tasksByCategory = session.query(Task, Category).\
@@ -237,87 +254,107 @@ class Customer:
         return tasksByPriority
 
     def search_by(self, session, user_id, parameter):
-        searchBy = session.query(Task).\
-                        filter(Task.user_id == user_id).\
-                        filter(or_(Task.task_title.like(parameter), 
-                            Task.task_desc.like(parameter)))
-        return searchBy
-
+        searchByParameter = session.query(Task).\
+                                filter(Task.user_id == user_id).\
+                                filter(or_(Task.task_title.like(parameter), 
+                                Task.task_desc.like(parameter)))
+        return searchByParameter
 
     ### METHODS FOR LOGS
     def add_activity_log(self, session, user_id, activity_id, task_id, log_date):
-        addActivityLog = ActivityLog(user_id=user_id, activity_id=activity_id, task_id=task_id, log_date=log_date)
-        session.add(addActivityLog)
+        activity = ActivityLog(user_id=user_id, activity_id=activity_id, 
+                        task_id=task_id, log_date=log_date)
+        session.add(activity)
         session.commit()
-        return addActivityLog
+        return activity
     
-    def allactivity(self, session, user_id):
-        activityLog = session.query(ActivityLog, User, AvailableActivities, Task).\
+    def get_all_activities(self, session, user_id):
+        activities = session.query(ActivityLog, User, AvailableActivities, Task).\
                         filter(ActivityLog.activity_id == AvailableActivities.activity_id).\
                         filter(ActivityLog.user_id == User.user_id).\
                         filter(ActivityLog.task_id == Task.task_id).\
                         filter(ActivityLog.user_id == user_id)
-        return activityLog
+        return activities
 
-    def delete_log(self, session, task_id):
-        deleleLog = session.query(ActivityLog).filter_by(task_id=task_id).delete()
+    def get_available_activities(self, session, activity_id):
+        availableActivities = session.query(AvailableActivities).\
+                                filter_by(activity_id=activity_id).first()
+        return availableActivities
+
+    def delete_activity_log(self, session, task_id):
+        activity = session.query(ActivityLog).filter_by(task_id=task_id).delete()
         session.commit()
-        return deleleLog
-
+        return activity
 
     ### METHODS FOR FILE
     def add_file(self, session, file_name, file_data, user_id):
-        addFile = FilesContent(file_name=file_name, file_data=file_data, user_id=user_id)
-        session.add(addFile)
+        _file = FilesContent(file_name=file_name, file_data=file_data, user_id=user_id)
+        session.add(_file)
         session.commit()
-        return addFile
+        return _file
     
-    def get_file(self, session, user_id):
-        getFile = session.query(FilesContent).\
+    def get_files(self, session, user_id):
+        _files = session.query(FilesContent).\
                     filter(FilesContent.user_id == user_id)
-        return getFile
+        return _files
 
     def download_file(self, session, user_id, file_id):
-        downloadFile = session.query(FilesContent).\
+        _file = session.query(FilesContent).\
                     filter_by(user_id=user_id, file_id=file_id).first()
-        return downloadFile
+        return _file
 
     def delete_file(self, session, file_id):
-        deleteFile = session.query(FilesContent).filter_by(file_id=file_id).delete()
+        _file = session.query(FilesContent).filter_by(file_id=file_id).delete()
         session.commit()
-        return deleteFile
-
+        return _file
 
     ### METHODS FOR GROUPS
     def create_group(self, session, group_name, user_id):
-        createGroup = Group(group_name=group_name, user_id=user_id)
-        session.add(createGroup)
+        group = Group(group_name=group_name, user_id=user_id)
+        session.add(group)
         session.commit()
-        return createGroup
+        return group
 
-    def add_user_to_group(self, session, group_id, user_id):
-        addUserToGroup = UserGroup(group_id=group_id, user_id=user_id)
-        session.add(addUserToGroup)
-        session.commit()
-        return addUserToGroup
+    def get_all_users(self, session, user_id):
+        users = session.query(User).filter(User.user_id != user_id)
+        return users
+
+    def get_groups_created_by_user(self, session, user_id):
+        groups = session.query(Group).filter(Group.user_id == user_id)
+        return groups
 
     def send_request(self, session, group_id, receiver_id, sender_id):
-        sendRequest = Request(group_id=group_id, receiver_id=receiver_id, sender_id=sender_id)
-        session.add(sendRequest)
+        request = Request(group_id=group_id, receiver_id=receiver_id, sender_id=sender_id)
+        session.add(request)
         session.commit()
-        return sendRequest
+        return request
+
+    def get_request(self, session, receiver_id):
+        request = session.query(Request, Group, User).\
+                    filter(Request.group_id == Group.group_id).\
+                    filter(Request.sender_id == User.user_id).\
+                    filter(Request.receiver_id == receiver_id)    
+        return request
 
     def delete_request(self, session, group_id, receiver_id):
-        deleteRequest = session.query(Request).filter(and_(Request.group_id == group_id, Request.receiver_id == receiver_id)).delete()
+        request = session.query(Request).\
+                    filter(and_(Request.group_id == group_id, Request.receiver_id == receiver_id)).\
+                    delete()
         session.commit()
-        return deleteRequest
+        return request
 
-    def get_curent_user_groups(self, session, user_id):
-        currentUserGroups = session.query(UserGroup, Group).\
-                            filter(UserGroup.group_id == Group.group_id).\
-                            filter(Group.user_id == User.user_id).\
-                            filter(UserGroup.user_id == user_id)
-        return currentUserGroups
+    def add_user_in_group(self, session, group_id, user_id):
+        userInGroup = UserGroup(group_id=group_id, user_id=user_id)
+        session.add(userInGroup)
+        session.commit()
+        return userInGroup
+
+    def get_groups_of_user(self, session, user_id):
+        groupsOfUser = session.query(UserGroup, Group).\
+                        filter(UserGroup.group_id == Group.group_id).\
+                        filter(Group.user_id == User.user_id).\
+                        filter(UserGroup.user_id == user_id)
+        return groupsOfUser
 
     def get_users_in_group(self, session, group_id):
         usersInGroup = session.query(UserGroup, User).\
@@ -325,101 +362,58 @@ class Customer:
                         filter(UserGroup.group_id == group_id)
         return usersInGroup
 
+    def get_group(self, session, group_id):
+        group = session.query(Group).filter(Group.group_id == group_id)
+        return group
 
     ### METHODS FOR ASSIGNING TASK TO OTHERS
     def assign_task(self, session, task_title, task_desc, task_date, category_id, status_id, priority_id,  assigner_id, assignee_id, group_id):
-        assignTask = TaskAssignment(task_title=task_title, task_desc=task_desc, task_date=task_date, category_id=category_id, status_id=status_id,
-                        priority_id=priority_id, assigner_id=assigner_id, assignee_id=assignee_id, group_id=group_id) 
-        session.add(assignTask)
+        assignedTask = TaskAssignment(task_title=task_title, task_desc=task_desc, 
+                        task_date=task_date, category_id=category_id, status_id=status_id,
+                        priority_id=priority_id, assigner_id=assigner_id, assignee_id=assignee_id, 
+                        group_id=group_id) 
+        session.add(assignedTask)
         session.commit()
-        return assignTask
+        return assignedTask
+
+    def get_assignee(self, session, assignee_id):
+        assignee = session.query(User).filter(User.user_id == assignee_id)
+        return assignee
 
     def get_assigned_tasks(self, session, user_id):
         assignedTasks = session.query(TaskAssignment, Category, Priority, Status, User, Group).\
-                        filter(TaskAssignment.category_id == Category.category_id).\
-                        filter(TaskAssignment.priority_id == Priority.priority_id).\
-                        filter(TaskAssignment.status_id == Status.status_id).\
-                        filter(TaskAssignment.assigner_id == User.user_id).\
-                        filter(TaskAssignment.group_id == Group.group_id).\
-                        order_by(TaskAssignment.task_date).\
-                        filter(TaskAssignment.assignee_id == user_id)
+                            filter(TaskAssignment.category_id == Category.category_id).\
+                            filter(TaskAssignment.priority_id == Priority.priority_id).\
+                            filter(TaskAssignment.status_id == Status.status_id).\
+                            filter(TaskAssignment.assigner_id == User.user_id).\
+                            filter(TaskAssignment.group_id == Group.group_id).\
+                            order_by(TaskAssignment.task_date).\
+                            filter(TaskAssignment.assignee_id == user_id)
         return assignedTasks
     
     def track_assigned_task(self, session, user_id):
-        trackTask = session.query(TaskAssignment, Category, Priority, Status, User, Group).\
-                        filter(TaskAssignment.category_id == Category.category_id).\
-                        filter(TaskAssignment.priority_id == Priority.priority_id).\
-                        filter(TaskAssignment.status_id == Status.status_id).\
-                        filter(TaskAssignment.assignee_id == User.user_id).\
-                        filter(TaskAssignment.group_id == Group.group_id).\
-                        filter(TaskAssignment.group_id == Group.group_id).\
-                        order_by(TaskAssignment.task_date).\
-                        filter(TaskAssignment.assigner_id == user_id)
-        return trackTask
+        assignedTasks = session.query(TaskAssignment, Category, Priority, Status, User, Group).\
+                            filter(TaskAssignment.category_id == Category.category_id).\
+                            filter(TaskAssignment.priority_id == Priority.priority_id).\
+                            filter(TaskAssignment.status_id == Status.status_id).\
+                            filter(TaskAssignment.assignee_id == User.user_id).\
+                            filter(TaskAssignment.group_id == Group.group_id).\
+                            filter(TaskAssignment.group_id == Group.group_id).\
+                            order_by(TaskAssignment.task_date).\
+                            filter(TaskAssignment.assigner_id == user_id)
+        return assignedTasks
 
     def update_assigned_task(self, session, task_id, status_id):
-        updateTask = session.query(TaskAssignment).filter(TaskAssignment.task_id == task_id).\
-                        update({TaskAssignment.status_id: status_id},
-                        synchronize_session=False)
+        assignedTasks = session.query(TaskAssignment).filter(TaskAssignment.task_id == task_id).\
+                            update({TaskAssignment.status_id: status_id},
+                            synchronize_session=False)
         session.commit()
-        return updateTask
+        return assignedTasks
 
-    # filter(TaskAssignment.group_id == Group.group_id).\
-
-    ### Helper functions
-    def get_task(self, session, task_id):
-        getTask = session.query(Task, Category, Status, Priority).\
-                filter(Task.category_id == Category.category_id).\
-                filter(Task.status_id == Status.status_id).\
-                filter(Task.priority_id == Priority.priority_id).\
-                filter(Task.task_id == task_id)
-        return getTask
-
-    def categories(self, session):
-        categories = session.query(Category).all()
-        return categories
-
-    def status(self, session):
-        status = session.query(Status).all()
-        return status
-
-    def priorities(self, session):
-        priorities = session.query(Priority).all()
-        return priorities
-    
-    def get_available_activity(self, session, activity_id):
-        availableActivity = session.query(AvailableActivities).\
-                                filter_by(activity_id=activity_id).first()
-        return availableActivity
-    
-    def get_all_users(self, session, user_id):
-        getUsers = session.query(User).filter(User.user_id != user_id)
-        return getUsers
-
-    def get_groups_created_by_user(self, session, user_id):
-        getGroups = session.query(Group).filter(Group.user_id == user_id)
-        return getGroups
-
-    def get_request(self, session, receiver_id):
-        getRequest = session.query(Request, Group, User).\
-                        filter(Request.group_id == Group.group_id).\
-                        filter(Request.sender_id == User.user_id).\
-                        filter(Request.receiver_id == receiver_id)    
-        return getRequest
-
-    def get_group(self, session, group_id):
-        getGroup = session.query(Group).filter(Group.group_id == group_id)
-        return getGroup
-
-    def get_assignee(self, session, assignee_id):
-        getAssignee = session.query(User).filter(User.user_id == assignee_id)
-        return getAssignee
-    
     def get_assigned_task(self, session, task_id):
-        getAssignedTask = session.query(TaskAssignment, Category, Status, Priority).\
+        assignedTtask = session.query(TaskAssignment, Category, Status, Priority).\
                             filter(TaskAssignment.category_id == Category.category_id).\
                             filter(TaskAssignment.status_id == Status.status_id).\
                             filter(TaskAssignment.priority_id == Priority.priority_id).\
                             filter(TaskAssignment.task_id == task_id)
-        return getAssignedTask
-
+        return assignedTtask
