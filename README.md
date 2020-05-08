@@ -42,39 +42,39 @@ The templates contains all the necessary HTML files for the user interface.
 
 **Get Started**
 
-![Get started](https://github.com/me50/StephenDsouza90/blob/web50/projects/2020/x/final/project4/screenshots/get_started.jpg)
+![Get started](./screenshots/get_started.jpg)
 
 **Main Page**
 
-![Main started](https://github.com/me50/StephenDsouza90/blob/web50/projects/2020/x/final/project4/screenshots/main.jpg)
+![Main started](./screenshots/main.jpg)
 
 **Activity Log**
 
-![Activity log](https://github.com/me50/StephenDsouza90/blob/web50/projects/2020/x/final/project4/screenshots/activity_log.jpg)
+![Activity log](./screenshots/activity_log.jpg)
 
 **Files**
 
-![Files](https://github.com/me50/StephenDsouza90/blob/web50/projects/2020/x/final/project4/screenshots/files.jpg)
+![Files](./screenshots/files.jpg)
 
 **Sending Request**
 
-![Sending request](https://github.com/me50/StephenDsouza90/blob/web50/projects/2020/x/final/project4/screenshots/sending_request.jpg)
+![Sending request](./screenshots/sending_request.jpg)
 
 **Received Request**
 
-![Received request](https://github.com/me50/StephenDsouza90/blob/web50/projects/2020/x/final/project4/screenshots/received_request.jpg)
+![Received request](./screenshots/received_request.jpg)
 
 **Users in a Group**
 
-![Groups](https://github.com/me50/StephenDsouza90/blob/web50/projects/2020/x/final/project4/screenshots/users_in_group.jpg)
+![Groups](./screenshots/users_in_group.jpg)
 
 **Assigned Task**
 
-![Assigned task](https://github.com/me50/StephenDsouza90/blob/web50/projects/2020/x/final/project4/screenshots/assigned_task.jpg)
+![Assigned task](./screenshots/assigned_task.jpg)
 
 **Tracking Task**
 
-![Tracking task](https://github.com/me50/StephenDsouza90/blob/web50/projects/2020/x/final/project4/screenshots/track_assigned_task.jpg)
+![Tracking task](./screenshots/track_assigned_task.jpg)
 
 ## How to run locally
 
