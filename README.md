@@ -42,7 +42,7 @@ The templates contains all the necessary HTML files for the user interface.
 
 **Get Started**
 
-![Get started](https://github.com/me50/StephenDsouza90/blob/web50/projects/2020/x/final/project4/screenshots/get_started.jpg)
+![Get started](./screenshots/get_started.jpg)
 
 **Main Page**
 
